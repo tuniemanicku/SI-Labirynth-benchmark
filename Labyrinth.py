@@ -12,6 +12,17 @@ class LabyrinthType(Enum):
 class Labyrinth:
     def __init__(self, type=LabyrinthType.EASY):
         self.board = np.random.randint(2, size=(LABYRINTH_SIZE,LABYRINTH_SIZE), dtype=int)
-        self.walls = np.random.randint(2, size=(LABYRINTH_SIZE+1,LABYRINTH_SIZE+1), dtype=int)
+        loadedBoard = np.zeros(shape=(LABYRINTH_SIZE,LABYRINTH_SIZE), dtype=int)
+        try:
+            with open("save.txt", "r") as f:
+                lines = f.readlines()
+                for y, line in enumerate(lines):
+                    values = line.strip().split()
+                    for x, val in enumerate(values):
+                        value = int(val)
+                        loadedBoard[y][x] = value
+        except FileNotFoundError:
+            print("save.txt not found.")
+        self.board = loadedBoard
         self.exit = Point(x=LABYRINTH_SIZE-1, y=LABYRINTH_SIZE-1)
 
